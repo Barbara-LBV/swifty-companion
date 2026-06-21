@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { IonItem, IonLabel, IonList, IonSearchbar } from '@ionic/angular/standalone';
+import { IonItem, IonLabel, IonList, IonSearchbar, IonToolbar } from '@ionic/angular/standalone';
 import { StudentService, Student42 } from '../student/student.service';
 
 @Component({
@@ -8,7 +8,7 @@ import { StudentService, Student42 } from '../student/student.service';
   standalone: true,
   templateUrl: './search-bar.component.html',
   styleUrls: ['./search-bar.component.scss'],
-  imports: [IonItem, IonLabel, IonList, IonSearchbar],
+  imports: [IonItem, IonLabel, IonList, IonSearchbar, IonToolbar],
 })
 export class SearchBarComponent {
 
@@ -24,10 +24,12 @@ export class SearchBarComponent {
       this.results = [];
       return;
     }
-    this.studentService.searchUsers(query).subscribe({
-      next: (users) => { this.results = users; },
+    let filteredQuery = query.toLowerCase();
+    this.studentService.searchUsers(filteredQuery).subscribe({
+      next: (users) => { this.results = users.sort((a, b) => a.login.localeCompare(b.login)); },
       error: (err) => { console.error('API error:', err); },
     });
+    // this.results.sort();
   }
 
   selectStudent(student: Student42) {
