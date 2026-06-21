@@ -1,0 +1,11 @@
+<ion-searchbar [debounce]="300" (ionInput)="handleInput($event)" (ionFocus)="isFocused = true" (ionBlur)="isFocused = false"></ion-searchbar>
+
+@if (isFocused && results.length > 0) {
+  <ion-list>
+    @for (student of results; track student.id) {
+      <ion-item button (click)="selectStudent(student)">
+        <ion-label>{{ student.login }}</ion-label>
+      </ion-item>
+    }
+  </ion-list>
+}
