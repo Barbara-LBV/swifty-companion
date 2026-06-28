@@ -29,7 +29,6 @@ export class SearchBarComponent {
       next: (users) => { this.results = users.sort((a, b) => a.login.localeCompare(b.login)); },
       error: (err) => { console.error('API error:', err); },
     });
-    // this.results.sort();
   }
 
   selectStudent(student: Student42) {

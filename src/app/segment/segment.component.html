@@ -1,0 +1,53 @@
+<ion-segment [value]="segment()" (ionChange)="onSegmentChange($event.detail.value)">
+  <ion-segment-button value="projects">
+    <ion-label>Projets</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="skills">
+    <ion-label>Compétences</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+@switch (segment()) {
+  @case ('projects') {
+    <ion-list>
+      @for (proj of projects(); track proj.project.id) {
+        @if (proj.isRetried) {
+          <ion-accordion-group>
+            <ion-accordion>
+              <ion-item slot="header">
+                <ion-label>{{ proj.project.name }}</ion-label>
+                <ion-badge slot="end" [color]="proj.attempts[proj.attempts.length - 1]['validated?'] ? 'success' : 'danger'">
+                  {{ proj.attempts[proj.attempts.length - 1].final_mark ?? '—' }}
+                </ion-badge>
+              </ion-item>
+              <div slot="content">
+                @for (attempt of proj.attempts; track attempt.id) {
+                  <ion-item lines="inset">
+                    <ion-label>Tentative {{ attempt.occurrence + 1 }}</ion-label>
+                    <ion-badge slot="end" [color]="attempt['validated?'] ? 'success' : 'danger'">
+                      {{ attempt.final_mark ?? '—' }}
+                    </ion-badge>
+                  </ion-item>
+                }
+              </div>
+            </ion-accordion>
+          </ion-accordion-group>
+        } @else {
+          <ion-item>
+            <ion-label>{{ proj.project.name }}</ion-label>
+            <ion-badge slot="end" [color]="proj.attempts[0]['validated?'] ? 'success' : 'danger'">
+              {{ proj.attempts[0].final_mark ?? '—' }}
+            </ion-badge>
+          </ion-item>
+        }
+      }
+    </ion-list>
+  }
+  @case ('skills') {
+    <ion-list>
+      @for (skill of skills(); track skill.id) {
+        <!-- barre de skill à implémenter -->
+      }
+    </ion-list>
+  }
+}
