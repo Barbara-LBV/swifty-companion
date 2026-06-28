@@ -70,4 +70,14 @@ GET /v2/users/:user_id/projects_users/graph(/on/:field(/by/:interval))
 GET /v2/users/:user_id/projects_users
 ```
 
-## L'authentification
+## les elements css ionic de la page stud
+
+- **accordeon pour les projets retry** : ion-accordion
+- **scroll pour les projets et competences, wraper ?** : ion-infinite-scroll
+- **bouton de navigation vers "skills" et "projects"** : ion-router ou ...
+- **pas de routage mais des segments ou une tabs**: ion-segment ou ion-tabs (icones en bas de l'ecran)
+    -   pas de routage supplementaire a faire
+    -   acces aux elements toujours visible
+- **thumbnail pour la photo** : ion-thumbnail, wrappable dans un ion-item(parent) et positionnable
+- **ion-item pour display infos principales de l'intra** : composant parent
+- 
