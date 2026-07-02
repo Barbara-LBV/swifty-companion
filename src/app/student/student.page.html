@@ -1,8 +1,8 @@
-<ion-header [translucent]="false">
+<!-- <ion-header [translucent]="false">
   <ion-toolbar>
-    <ion-title>Profil</ion-title>
+    <ion-title>Stud 42</ion-title>
   </ion-toolbar>
-</ion-header>
+</ion-header> -->
 
 <ion-content [fullscreen]="true">
   @if (loading()) {
@@ -10,21 +10,19 @@
   } @else if (error()) {
     <p>{{ error() }}</p>
   } @else if (profile(); as p) {
-    <ion-card>
+    <ion-card class="card">
       <ion-item lines="none">
-        <ion-avatar slot="start">
-          <ion-img [src]="p.student.image.link"></ion-img>
-        </ion-avatar>
+        <ion-img class="profile-picture" slot="start" [src]="p.student.image.link"></ion-img>
         <ion-label>
           <ion-card-title>{{ p.student.usual_full_name }}</ion-card-title>
           <ion-card-subtitle>{{ p.student.login }}</ion-card-subtitle>
         </ion-label>
       </ion-item>
       <ion-card-content>
-        <p>Email: {{ p.student.email }}</p>
-        <p>Phone: {{ p.student.phone }}</p>
-        <p>Wallet: {{ p.student.wallet }}</p>
-        <p>Correction Points: {{ p.student.correction_point }}</p>
+        <p class="text-item"><span class="label">Email: </span> <span class="value">{{ p.student.email }}</span></p>
+        <p class="text-item"><span class="label">Phone: </span> <span class="value">{{ p.student.phone }}</span></p>
+        <p class="text-item"><span class="label">Wallet: </span> <span class="value">{{ p.student.wallet }}</span></p>
+        <p class="text-item"><span class="label">Eval. Points: </span> <span class="value">{{ p.student.correction_point }}</span></p>
       </ion-card-content>
     </ion-card>
 

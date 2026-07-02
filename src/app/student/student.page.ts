@@ -3,7 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonSpinner, IonImg,
   IonCard, IonCardTitle, IonCardSubtitle, IonCardContent,
-  IonItem, IonAvatar, IonLabel } from '@ionic/angular/standalone';
+  IonItem, IonLabel } from '@ionic/angular/standalone';
 import { StudentService, FullProfile, SkillUser, GroupedProject } from './student.service';
 import { SegmentComponent } from '../segment/segment.component';
 
@@ -14,7 +14,7 @@ import { SegmentComponent } from '../segment/segment.component';
   standalone: true,
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonSpinner, IonImg,
     IonCard, IonCardTitle, IonCardSubtitle, IonCardContent,
-    IonItem, IonAvatar, IonLabel,
+    IonItem, IonLabel,
     SegmentComponent],
 })
 export class StudentPage implements OnInit {
