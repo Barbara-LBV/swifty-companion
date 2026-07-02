@@ -80,4 +80,57 @@ GET /v2/users/:user_id/projects_users
     -   acces aux elements toujours visible
 - **thumbnail pour la photo** : ion-thumbnail, wrappable dans un ion-item(parent) et positionnable
 - **ion-item pour display infos principales de l'intra** : composant parent
-- 
+
+
+### reste a faire 
+- mettre les "projects retried"
+- mettre les competences/skills
+- revoir un peu le style (couleur, font etc)
+
+1- Mettre un menu deroulant pour choisir le cursus. Par defaut, on met le '42cursus|42senior|42zip' s'ils existent, sinon, on met la piscineC ou next (prioritaire sur la discovery si elle existe), et la piscine discovery s'il n'y a que ca.
+ -> de fait, n'afficher que les projets lies au cursus demande.
+
+2- afficher les projets retries dans tous les cas
+
+3- afficher les skills : passer par le 
+
+
+<!-- async ngOnInit() {
+    const login = this.route.snapshot.paramMap.get('login') ?? '';
+    this.loading.set(true);
+    try {
+      const profile = await firstValueFrom(this.studentService.getFullProfile(login));
+      this.profile.set(profile);
+
+      const rawProjects = profile.student.projects_users.filter(p => p.status === 'finished');
+      const groupedProjects = await firstValueFrom(this.studentService.groupedRetriedProjects(rawProjects));
+      this.projects.set(groupedProjects);
+      const studentId = profile.student.id;
+      const [skills] = await Promise.all([
+        firstValueFrom(this.studentService.getUserSkills(studentId)),
+      ]);
+      this.rawSkills.set(skills);
+    } catch {
+      this.error.set('Impossible de charger le profil.');
+    } finally {
+      this.loading.set(false);
+    }
+  } -->
+
+   <!-- groupedRetriedProjects(projects: ProjectUser[]): Observable<GroupedProject[]> {
+    return of(projects).pipe(
+      map(projects => {
+        const byProject = new Map<number, ProjectUser[]>();
+        for (const p of projects.filter(p => p.status === 'finished')) {
+          const arr = byProject.get(p.project.id) ?? [];
+          arr.push(p);
+          byProject.set(p.project.id, arr);
+        }
+        return Array.from(byProject.values()).map(attempts => ({
+          project: attempts[0].project,
+          attempts: attempts.sort((a, b) => a.occurrence - b.occurrence),
+          isRetried: attempts.length > 1,
+        }));
+      })
+    );
+  } -->

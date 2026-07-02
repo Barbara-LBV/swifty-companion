@@ -16,15 +16,15 @@
             <ion-accordion>
               <ion-item slot="header">
                 <ion-label>{{ proj.project.name }}</ion-label>
-                <ion-badge slot="end" [color]="proj.attempts[proj.attempts.length - 1]['validated?'] ? 'success' : 'danger'">
-                  {{ proj.attempts[proj.attempts.length - 1].final_mark ?? '—' }}
+                <ion-badge slot="end" [color]="(proj.finalMark ?? 0) > 0 ? 'success' : 'danger'">
+                  {{ proj.finalMark ?? '—' }}
                 </ion-badge>
               </ion-item>
               <div slot="content">
-                @for (attempt of proj.attempts; track attempt.id) {
+                @for (attempt of proj.attempts; track attempt.id; let i = $index) {
                   <ion-item lines="inset">
-                    <ion-label>Tentative {{ attempt.occurrence + 1 }}</ion-label>
-                    <ion-badge slot="end" [color]="attempt['validated?'] ? 'success' : 'danger'">
+                    <ion-label>Attempt {{ i + 1 }}</ion-label>
+                    <ion-badge slot="end" [color]="(attempt.final_mark ?? 0) > 0 ? 'success' : 'danger'">
                       {{ attempt.final_mark ?? '—' }}
                     </ion-badge>
                   </ion-item>
@@ -35,8 +35,8 @@
         } @else {
           <ion-item>
             <ion-label>{{ proj.project.name }}</ion-label>
-            <ion-badge slot="end" [color]="proj.attempts[0]['validated?'] ? 'success' : 'danger'">
-              {{ proj.attempts[0].final_mark ?? '—' }}
+            <ion-badge slot="end" [color]="(proj.finalMark ?? 0) > 0 ? 'success' : 'danger'">
+              {{ proj.finalMark ?? '—' }}
             </ion-badge>
           </ion-item>
         }

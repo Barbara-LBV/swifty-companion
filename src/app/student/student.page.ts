@@ -6,6 +6,7 @@ import { IonContent, IonHeader, IonTitle, IonToolbar, IonSpinner, IonImg,
   IonItem, IonLabel } from '@ionic/angular/standalone';
 import { StudentService, FullProfile, SkillUser, GroupedProject } from './student.service';
 import { SegmentComponent } from '../segment/segment.component';
+import { CursusComponent } from '../cursus/cursus.component';
 
 @Component({
   selector: 'app-student',
@@ -14,7 +15,7 @@ import { SegmentComponent } from '../segment/segment.component';
   standalone: true,
   imports: [IonContent, IonHeader, IonTitle, IonToolbar, IonSpinner, IonImg,
     IonCard, IonCardTitle, IonCardSubtitle, IonCardContent,
-    IonItem, IonLabel,
+    IonItem, IonLabel, CursusComponent,
     SegmentComponent],
 })
 export class StudentPage implements OnInit {
@@ -38,12 +39,20 @@ export class StudentPage implements OnInit {
       this.profile.set(profile);
 
       const studentId = profile.student.id;
-      const [skills, projects] = await Promise.all([
+      const [projectsUsers, skills] = await Promise.all([
+        firstValueFrom(this.studentService.getUserProjects(studentId)),
         firstValueFrom(this.studentService.getUserSkills(studentId)),
-        firstValueFrom(this.studentService.groupedRetriedProjects(studentId)),
       ]);
+      // const cursus42 = profile.student.cursus_users.find(c => c.cursus.name === '42cursus');
+      // if (cursus42) {
+      //   const cursusId = cursus42.cursus.id;
+      //   const filteredProjects = this.studentService.displayProjectByCursus(grouped, cursusId);
+      //   this.projects.set(filteredProjects);
+      // }
+      const grouped = this.studentService.groupedRetriedProjects(projectsUsers)
+        .filter(p => p.attempts.length > 0);
+      this.projects.set(grouped);
       this.rawSkills.set(skills);
-      this.projects.set(projects);
     } catch {
       this.error.set('Impossible de charger le profil.');
     } finally {

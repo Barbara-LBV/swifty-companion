@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
+import { Observable, forkJoin, of, switchMap } from 'rxjs';
 
 
 // interfaces representing the structure of objects returned by the 42 API
@@ -19,6 +19,17 @@ export interface CursusUser {
   level: number;
   cursus_id: number;
   cursus: { id: number; name: string; slug: string };
+  projects_users: ProjectUser[];
+
+}
+
+export interface Team {
+  id: number;
+  name: string;
+  final_mark: number | null;
+  status: string;
+  created_at: string;
+  closed_at: string | null;
 }
 
 export interface ProjectUser {
@@ -33,7 +44,7 @@ export interface ProjectUser {
   marked: boolean;
   marked_at: string | null;
   project: { id: number; name: string; slug: string; parent_id: number | null };
-  teams: { id: number; name: string; slug: string; final_mark: number | null; status: string }[];
+  teams: Team[];
 }
 
 export interface Student42 {
@@ -58,7 +69,8 @@ export interface Student42 {
 
 export interface GroupedProject {
   project: { id: number; name: string; slug: string; parent_id: number | null };
-  attempts: ProjectUser[];
+  attempts: Team[];
+  finalMark: number | null;
   isRetried: boolean;
 }
 
@@ -112,22 +124,31 @@ export class StudentService {
     );
   }
 
-  groupedRetriedProjects(id: number): Observable<GroupedProject[]> {
-    return this.http.get<ProjectUser[]>(`${API}/users/${id}/projects_users`).pipe(
-      map(projects => {
-        const byProject = new Map<number, ProjectUser[]>();
-        for (const p of projects.filter(p => p.status === 'finished')) {
-          const arr = byProject.get(p.project.id) ?? [];
-          arr.push(p);
-          byProject.set(p.project.id, arr);
-        }
-        return Array.from(byProject.values()).map(attempts => ({
-          project: attempts[0].project,
-          attempts: attempts.sort((a, b) => a.occurrence - b.occurrence),
-          isRetried: attempts.length > 1,
-        }));
-      })
-    );
+  displayProjectByCursus(projects: ProjectUser[], cursusId: number): ProjectUser[] {
+    return projects.filter(p => p.cursus_ids.includes(cursusId));
+  }
+
+  groupedRetriedProjects(projects: ProjectUser[]): GroupedProject[] {
+    const byProject = new Map<number, ProjectUser[]>();
+    for (const p of projects.filter(p => p.status === 'finished')) {
+      const arr = byProject.get(p.project.id) ?? [];
+      arr.push(p);
+      byProject.set(p.project.id, arr);
+    }
+    return Array.from(byProject.values()).map(projectUsers => {
+      const attempts = ([] as Team[])
+        .concat(...projectUsers.map(pu => pu.teams))
+        .sort((a: Team, b: Team) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime());
+      const latest = projectUsers.reduce((a, b) =>
+        new Date(b.created_at).getTime() > new Date(a.created_at).getTime() ? b : a
+      );
+      return {
+        project: latest.project,
+        attempts,
+        finalMark: latest.final_mark,
+        isRetried: attempts.length > 1,
+      };
+    });
   }
 
 
