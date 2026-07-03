@@ -44,9 +44,20 @@ NB: this endpoint is usefull to get the project and its attempts.
 GET /v2/users/:user_id/projects_users
 ```
 
-## ionic components for the two pages
+## launching project
 
+1. in one terminal, launch the server :
 
+```bash
+cd server
+npm start
+```
+
+2. in a 2nd terminal, launch ionic server at the project root - ./Swifty-Companion
+
+```bash
+ionic serve
+```
 
 ## Test for refresh token
 
