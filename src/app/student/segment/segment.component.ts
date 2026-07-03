@@ -1,7 +1,7 @@
 import { Component, effect, input, signal } from '@angular/core';
 import { IonLabel, IonSegment, IonSegmentButton, 
   IonAccordionGroup, IonAccordion, IonItem, IonBadge, IonList } from '@ionic/angular/standalone';
-import { SkillUser, GroupedProject } from '../student/student.service';
+import { SkillUser, GroupedProject } from '../student.service';
 
 export type Segment = 'projects' | 'skills';
 

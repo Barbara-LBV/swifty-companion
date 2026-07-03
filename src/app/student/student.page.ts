@@ -4,9 +4,9 @@ import { firstValueFrom } from 'rxjs';
 import { IonContent, IonHeader, IonTitle, IonToolbar, IonSpinner, IonImg,
   IonCard, IonCardTitle, IonCardSubtitle, IonCardContent,
   IonItem, IonLabel } from '@ionic/angular/standalone';
-import { StudentService, FullProfile, SkillUser, GroupedProject } from './student.service';
-import { SegmentComponent } from '../segment/segment.component';
-import { CursusComponent } from '../cursus/cursus.component';
+import { StudentService, FullProfile, SkillUser, ProjectUser } from './student.service';
+import { SegmentComponent } from './segment/segment.component';
+import { CursusComponent } from './cursus/cursus.component';
 
 @Component({
   selector: 'app-student',
@@ -24,12 +24,23 @@ export class StudentPage implements OnInit {
 
   profile = signal<FullProfile | null>(null);
   rawSkills = signal<SkillUser[]>([]);
-  projects = signal<GroupedProject[]>([]);
+  rawProjectsUsers = signal<ProjectUser[]>([]);
+  selectedCursusId = signal<number | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
 
   // TODO: croiser rawSkills avec projects pour calculer les skills affichés
   skills = computed(() => this.rawSkills());
+
+  projects = computed(() => {
+    const cursusId = this.selectedCursusId();
+    const raw = this.rawProjectsUsers();
+    const filtered = cursusId !== null
+      ? this.studentService.displayProjectByCursus(raw, cursusId)
+      : raw;
+    return this.studentService.groupedRetriedProjects(filtered)
+      .filter(p => p.attempts.length > 0);
+  });
 
   async ngOnInit() {
     const login = this.route.snapshot.paramMap.get('login') ?? '';
@@ -43,20 +54,16 @@ export class StudentPage implements OnInit {
         firstValueFrom(this.studentService.getUserProjects(studentId)),
         firstValueFrom(this.studentService.getUserSkills(studentId)),
       ]);
-      // const cursus42 = profile.student.cursus_users.find(c => c.cursus.name === '42cursus');
-      // if (cursus42) {
-      //   const cursusId = cursus42.cursus.id;
-      //   const filteredProjects = this.studentService.displayProjectByCursus(grouped, cursusId);
-      //   this.projects.set(filteredProjects);
-      // }
-      const grouped = this.studentService.groupedRetriedProjects(projectsUsers)
-        .filter(p => p.attempts.length > 0);
-      this.projects.set(grouped);
+      this.rawProjectsUsers.set(projectsUsers);
       this.rawSkills.set(skills);
     } catch {
       this.error.set('Impossible de charger le profil.');
     } finally {
       this.loading.set(false);
     }
+  }
+
+  onCursusChange(cursusId: number) {
+    this.selectedCursusId.set(cursusId);
   }
 }
