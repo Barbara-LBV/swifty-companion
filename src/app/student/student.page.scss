@@ -8,11 +8,24 @@
 
 .card {
   margin: 16px;
-  color: var(--ion-text-color);
+  background: #94b5c6; // 42's signature teal
+  color: #cfcece;
+  border-radius: 12px;
 
   ion-item {
     align-items: center;
     padding-top: 16px;
+    --background: transparent;
+    --color: #ffffff;
+  }
+
+  ion-card-title,
+  ion-card-subtitle {
+    color: #ffffff;
+  }
+
+  ion-card-subtitle {
+    color: rgba(255, 255, 255, 0.85);
   }
 }
 
@@ -21,11 +34,11 @@
   font-family: var(--ion-font-family);
 
   .label {
-    color: var(--ion-text-color);
+    color: #ffffff;
     font-weight: 600;
   }
 
   .value {
-    color: var(--ion-color-medium);
+    color: rgba(255, 255, 255, 0.85);
   }
 }

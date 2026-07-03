@@ -69,3 +69,7 @@ testem.log
 .DS_Store
 Thumbs.db
 src/environments/environment.ts
+
+# Token proxy server
+server/.env
+server/node_modules
