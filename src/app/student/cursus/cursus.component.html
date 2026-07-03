@@ -1,7 +1,0 @@
-<ion-segment [value]="selected()" (ionChange)="onChange($event.detail.value)">
-  @for (cu of cursusOptions(); track cu.cursus.id) {
-    <ion-segment-button [value]="cu.cursus.id">
-      <ion-label>{{ cu.cursus.name }}</ion-label>
-    </ion-segment-button>
-  }
-</ion-segment>

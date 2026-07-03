@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, of, switchMap } from 'rxjs';
+import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
 
 
 // interfaces representing the structure of objects returned by the 42 API
@@ -19,9 +19,9 @@ export interface CursusUser {
   level: number;
   cursus_id: number;
   cursus: { id: number; name: string; slug: string };
-  projects_users: ProjectUser[];
-
+  skills: SkillUser[];
 }
+
 
 export interface Team {
   id: number;
@@ -96,20 +96,19 @@ export class StudentService {
     });
   }
 
-  getUserByLogin(login: string): Observable<Student42> {
-    return this.http.get<Student42>(`${API}/users/${login}`);
-  }
-
-  getUserInfo(id: number): Observable<Student42> {
-    return this.http.get<Student42>(`${API}/users/${id}`);
-  }
-
   getUserProjects(id: number): Observable<ProjectUser[]> {
-    return this.http.get<ProjectUser[]>(`${API}/users/${id}/projects_users`);
+    return this.getAllPages<ProjectUser>(`${API}/users/${id}/projects_users`);
   }
 
-  getUserSkills(id: number): Observable<SkillUser[]> {
-    return this.http.get<SkillUser[]>(`${API}/skills`);
+  private getAllPages<T>(url: string, pageNumber = 1, pageSize = 100): Observable<T[]> {
+    return this.http.get<T[]>(url, {
+      params: { 'page[size]': pageSize, 'page[number]': pageNumber },
+    }).pipe(
+      switchMap(page => page.length < pageSize
+        ? of(page)
+        : this.getAllPages<T>(url, pageNumber + 1, pageSize).pipe(map(rest => page.concat(rest)))
+      )
+    );
   }
 
   getFullProfile(login: string): Observable<FullProfile> {
@@ -152,8 +151,11 @@ export class StudentService {
   }
 
 
-  calculateSkillLevel(skills: SkillUser[], project: ProjectUser): number {
-    const totalLevel = skills.reduce((sum, skill) => sum + skill.level, 0);
-    return skills.length > 0 ? Math.round(totalLevel / skills.length) : 0;
+  calculateSkillPourcent(skills: SkillUser[]): void {
+    for (const skill of skills) {
+      skill.level = Math.round(skill.level * 100) / 100;
+      const level = Math.floor(skill.level);
+      skill.pourcent = Math.round((skill.level - level) * 100);
+    }
   }
 }

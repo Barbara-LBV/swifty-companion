@@ -1,13 +1,44 @@
 import { Component } from '@angular/core';
-import { IonContent, IonImg} from '@ionic/angular/standalone';
+import { IonContent } from '@ionic/angular/standalone';
 import { LogoComponent } from './logo/logo.component';
 import { SearchBarComponent } from './search-bar/search-bar.component';
 
 @Component({
   selector: 'app-home',
-  templateUrl: 'home.page.html',
-  styleUrls: ['home.page.scss'],
-  imports: [IonContent, LogoComponent, SearchBarComponent, IonImg],
+  template: `
+    <ion-content [fullscreen]="true">
+      <div class="page-layout">
+        <app-logo></app-logo>
+        <div class="search-overlay">
+         <app-search-bar></app-search-bar>
+        </div>
+      </div>
+    </ion-content>`,
+  styles: `.page-layout {
+      position: relative;
+      min-height: 100%;
+
+      app-logo {
+        display: block;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 0;
+      }
+    }
+
+    .search-overlay {
+      // position: relative;
+      z-index: 1;
+      margin-top: 70vh;
+      width: 90%;
+      margin-left: auto;
+      margin-right: auto;
+      padding-bottom: 16px;
+    }`,
+  imports: [IonContent, LogoComponent, SearchBarComponent],
 })
 export class HomePage {
   constructor() {}

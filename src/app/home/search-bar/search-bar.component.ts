@@ -10,7 +10,7 @@ import { StudentService, Student42 } from '../../student/student.service';
   selector: 'app-search-bar',
   standalone: true,
   templateUrl: './search-bar.component.html',
-  styleUrls: ['./search-bar.component.scss'],
+  styleUrls: [],
   imports: [IonItem, IonLabel, IonList, IonSearchbar, IonToolbar],
 })
 export class SearchBarComponent {

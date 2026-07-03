@@ -1,6 +1,6 @@
 import { Component, effect, input, signal } from '@angular/core';
-import { IonLabel, IonSegment, IonSegmentButton, 
-  IonAccordionGroup, IonAccordion, IonItem, IonBadge, IonList } from '@ionic/angular/standalone';
+import { IonLabel, IonSegment, IonSegmentButton,
+  IonAccordionGroup, IonAccordion, IonItem, IonBadge, IonList, IonIcon } from '@ionic/angular/standalone';
 import { SkillUser, GroupedProject } from '../student.service';
 
 export type Segment = 'projects' | 'skills';
@@ -10,8 +10,8 @@ export type Segment = 'projects' | 'skills';
   standalone: true,
   templateUrl: './segment.component.html',
   styleUrls: ['./segment.component.scss'],
-  imports: [IonLabel, IonSegment, IonSegmentButton, IonAccordionGroup, IonAccordion, 
-    IonItem, IonBadge, IonList]
+  imports: [IonLabel, IonSegment, IonSegmentButton, IonAccordionGroup, IonAccordion,
+    IonItem, IonBadge, IonList, IonIcon]
 })
 export class SegmentComponent {
   projects = input.required<GroupedProject[]>();

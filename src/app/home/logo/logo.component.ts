@@ -1,12 +1,16 @@
 import { Component, OnInit } from '@angular/core';
-import { IonImg} from '@ionic/angular/standalone';
+import { IonImg } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-logo',
   standalone: true,
   imports: [IonImg],
-  templateUrl: './logo.component.html',
-  styleUrls: ['./logo.component.scss'],
+  template: `<ion-img src="assets/images/42logo.jpg"></ion-img>`,
+  styles: `ion-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    }`,
 })
 export class LogoComponent  implements OnInit {
 

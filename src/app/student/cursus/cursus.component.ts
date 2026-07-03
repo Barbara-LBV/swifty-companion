@@ -1,13 +1,28 @@
 import { Component, computed, effect, input, output, signal } from '@angular/core';
-import { IonSegment, IonSegmentButton, IonLabel } from '@ionic/angular/standalone';
+import { IonChip } from '@ionic/angular/standalone';
 import { CursusUser } from '../student.service';
 
 @Component({
   selector: 'app-cursus',
   standalone: true,
-  imports: [IonSegment, IonSegmentButton, IonLabel],
-  templateUrl: './cursus.component.html',
-  styleUrls: ['./cursus.component.scss'],
+  imports: [IonChip],
+  template: `<div class="cursus-selector">
+    @for (cu of cursusOptions(); track cu.cursus.id) {
+      <ion-chip
+        [outline]="selected() !== cu.cursus.id"
+        [color]="selected() === cu.cursus.id ? 'primary' : 'medium'"
+        (click)="selectCursus(cu.cursus.id)">
+        {{ cu.cursus.name }}
+      </ion-chip>
+    }
+  </div>`,
+  styles: `.cursus-selector {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 4px;
+      padding: 0 16px;
+    }`
 })
 export class CursusComponent {
   cursusUsers = input.required<CursusUser[]>();
@@ -37,9 +52,7 @@ export class CursusComponent {
     });
   }
 
-  onChange(value: string | number | undefined) {
-    if (value !== undefined) {
-      this.selected.set(Number(value));
-    }
+  selectCursus(cursusId: number) {
+    this.selected.set(cursusId);
   }
 }
