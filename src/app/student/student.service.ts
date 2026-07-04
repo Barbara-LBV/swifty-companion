@@ -22,7 +22,6 @@ export interface CursusUser {
   skills: SkillUser[];
 }
 
-
 export interface Team {
   id: number;
   name: string;
@@ -56,12 +55,10 @@ export interface Student42 {
   usual_full_name: string;
   image: { link: string; versions: { large: string; medium: string; small: string; micro: string } };
   phone: string;
-  location: string | null;
   kind: string;
+  level: number;
   correction_point: number;
   wallet: number;
-  pool_month: string;
-  pool_year: string;
   campus: { id: number; name: string; time_zone: string }[];
   cursus_users: CursusUser[];
   projects_users: ProjectUser[];
@@ -125,6 +122,11 @@ export class StudentService {
 
   displayProjectByCursus(projects: ProjectUser[], cursusId: number): ProjectUser[] {
     return projects.filter(p => p.cursus_ids.includes(cursusId));
+  }
+
+  displayLevelByCursus(cursusUsers: CursusUser[], cursusId: number): number {
+    const cursus = cursusUsers.find(c => c.cursus_id === cursusId);
+    return cursus ? cursus.level : 0;
   }
 
   groupedRetriedProjects(projects: ProjectUser[]): GroupedProject[] {

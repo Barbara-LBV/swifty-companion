@@ -30,13 +30,11 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
     }
 
     .search-overlay {
-      // position: relative;
-      z-index: 1;
-      margin-top: 70vh;
+      position: fixed;
+      bottom: 80px;
+      left: 5%;
       width: 90%;
-      margin-left: auto;
-      margin-right: auto;
-      padding-bottom: 16px;
+      z-index: 1;
     }`,
   imports: [IonContent, LogoComponent, SearchBarComponent],
 })

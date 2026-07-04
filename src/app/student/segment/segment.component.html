@@ -25,7 +25,7 @@
                   @for (attempt of proj.attempts; track attempt.id; let i = $index) {
                     <ion-item lines="inset">
                       <ion-label class="attempt-label">Attempt {{ i + 1 }}</ion-label>
-                      <ion-badge slot="end" [color]="(attempt.final_mark ?? 0) > 70 ? 'success' : 'danger'">
+                      <ion-badge slot="end" [color]="i === proj.attempts.length - 1 ? 'success' : 'danger'">
                         {{ attempt.final_mark ?? '—' }}
                       </ion-badge>
                     </ion-item>

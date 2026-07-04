@@ -1,29 +1,43 @@
-<!-- <ion-header [translucent]="false">
-  <ion-toolbar>
-    <ion-title>Stud 42</ion-title>
-  </ion-toolbar>
-</ion-header> -->
-
-<ion-content [fullscreen]="true">
+<ion-content [fullscreen]="true" class="content">
   @if (loading()) {
     <ion-spinner name="crescent"></ion-spinner>
   } @else if (error()) {
     <p>{{ error() }}</p>
   } @else if (profile(); as p) {
     <ion-card class="card">
-      <ion-item lines="none">
-        <ion-img class="profile-picture" slot="start" [src]="p.student.image.link"></ion-img>
-        <ion-label>
+      <div class="card-header">
+        <ion-img class="profile-picture" [src]="p.student.image.link"></ion-img>
+        <div class="card-identity">
           <ion-card-title>{{ p.student.usual_full_name }}</ion-card-title>
           <ion-card-subtitle>{{ p.student.login }}</ion-card-subtitle>
-        </ion-label>
-      </ion-item>
-      <ion-card-content>
-        <p class="text-item"><span class="label">Email: </span> <span class="value">{{ p.student.email }}</span></p>
-        <p class="text-item"><span class="label">Phone: </span> <span class="value">{{ p.student.phone }}</span></p>
-        <p class="text-item"><span class="label">Wallet: </span> <span class="value">{{ p.student.wallet }}</span></p>
-        <p class="text-item"><span class="label">Eval. Points: </span> <span class="value">{{ p.student.correction_point }}</span></p>
-      </ion-card-content>
+        </div>
+      </div>
+      <div class="card-details">
+        <div class="detail-item">
+          <span class="label">Email</span>
+          <span class="value">{{ p.student.email }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Campus</span>
+          <span class="value">{{ p.student.campus[0]?.name }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Status</span>
+          <span class="value">{{ p.student.kind }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Level</span>
+          <span class="value">{{ level() | number:'1.2-2' }}%</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Wallet</span>
+          <span class="value">{{ p.student.wallet }} ₳</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Eval. Points</span>
+          <span class="value">{{ p.student.correction_point }}</span>
+        </div>
+      </div>
     </ion-card>
     <app-cursus [cursusUsers]="p.student.cursus_users" (cursusChange)="onCursusChange($event)"></app-cursus>
     <app-segment [projects]="projects()" [skills]="skills()" />

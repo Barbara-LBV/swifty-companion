@@ -1,8 +1,9 @@
 import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { DecimalPipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { IonContent, IonSpinner, IonImg,
-  IonCard, IonCardTitle, IonCardSubtitle, IonCardContent,
+  IonCard, IonCardTitle, IonCardSubtitle,
   IonItem, IonLabel } from '@ionic/angular/standalone';
 import { StudentService, FullProfile, ProjectUser } from './student.service';
 import { SegmentComponent } from './segment/segment.component';
@@ -14,9 +15,9 @@ import { CursusComponent } from './cursus/cursus.component';
   styleUrls: ['./student.page.scss'],
   standalone: true,
   imports: [IonContent, IonSpinner, IonImg,
-    IonCard, IonCardTitle, IonCardSubtitle, IonCardContent,
+    IonCard, IonCardTitle, IonCardSubtitle,
     IonItem, IonLabel, CursusComponent,
-    SegmentComponent],
+    SegmentComponent, DecimalPipe],
 })
 export class StudentPage implements OnInit {
   private route = inject(ActivatedRoute);
@@ -44,6 +45,13 @@ export class StudentPage implements OnInit {
       : raw;
     return this.studentService.groupedRetriedProjects(filtered)
       .filter(p => p.attempts.length > 0);
+  });
+
+  level = computed(() => {
+    const cursusId = this.selectedCursusId();
+    if (cursusId === null) return 0;
+    const cursusUsers = this.profile()?.student.cursus_users ?? [];
+    return this.studentService.displayLevelByCursus(cursusUsers, cursusId);
   });
 
   async ngOnInit() {
