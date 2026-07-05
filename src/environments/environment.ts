@@ -3,9 +3,9 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false,
-  uid: 'u-s4t2ud-20a28c8c1c72bdb475047fd7ad89f2795a93191be753a64bc6746c28eb503d42',
-  secret: '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',
+  production: true,
+  uid: 'xxxxxxxxxxxxxxxxxxxxxxxxx',
+  secret: 'xxxxxxxxxxxxxxxxxxxxxxxxx',
   // No 42 client secret here anymore: the app asks this local proxy
   // (see /server) for a token, and the proxy is the only thing that
   // ever holds the real secret.
