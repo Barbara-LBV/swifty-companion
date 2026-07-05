@@ -2,9 +2,8 @@ import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { DecimalPipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
-import { IonContent, IonSpinner, IonImg,
-  IonCard, IonCardTitle, IonCardSubtitle,
-  IonItem, IonLabel } from '@ionic/angular/standalone';
+import { IonContent, IonSpinner, IonImg, IonCard, IonCardTitle, IonCardSubtitle 
+  } from '@ionic/angular/standalone';
 import { StudentService, FullProfile, ProjectUser } from './student.service';
 import { SegmentComponent } from './segment/segment.component';
 import { CursusComponent } from './cursus/cursus.component';
@@ -12,12 +11,10 @@ import { CursusComponent } from './cursus/cursus.component';
 @Component({
   selector: 'app-student',
   templateUrl: './student.page.html',
-  styleUrls: ['./student.page.scss'],
+  styleUrls: ['./student.page.scss'], 
   standalone: true,
-  imports: [IonContent, IonSpinner, IonImg,
-    IonCard, IonCardTitle, IonCardSubtitle,
-    IonItem, IonLabel, CursusComponent,
-    SegmentComponent, DecimalPipe],
+  imports: [IonContent, IonSpinner, IonImg, IonCard, IonCardTitle, 
+    IonCardSubtitle, CursusComponent, SegmentComponent, DecimalPipe],
 })
 export class StudentPage implements OnInit {
   private route = inject(ActivatedRoute);

@@ -1,5 +1,9 @@
 <ion-toolbar>
-  <ion-searchbar (ionInput)="handleInput($event)" (ionFocus)="isFocused = true" (ionBlur)="isFocused = false"></ion-searchbar>
+  <ion-searchbar 
+    (ionInput)="handleInput($event)" 
+    (ionFocus)="isFocused = true" 
+    (ionBlur)="isFocused = false">
+  </ion-searchbar>
 </ion-toolbar>
 
 @if (results.length > 0) {

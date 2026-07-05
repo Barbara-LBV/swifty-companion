@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Observable, of, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { switchMap } from 'rxjs';
@@ -16,7 +16,6 @@ interface TokenResponse {
   providedIn: 'root',
 })
 export class Auth {
-
   private http = inject(HttpClient);
   private token: string | null = null;
   private expiresAt = 0;
@@ -25,7 +24,7 @@ export class Auth {
     if (this.token && Date.now() < this.expiresAt) {
       return of(this.token); // if token still valid
     }
-    return this.fetchToken();
+    return this.refreshToken();
   }
 
   // Bypasses the local cache entirely: used when the API rejects a token
@@ -36,9 +35,13 @@ export class Auth {
   }
 
   private fetchToken(): Observable<string> {
-    // The 42 client secret never lives in the app: this proxy (see /server)
-    // holds it server-side and hands back a short-lived access token.
-    return this.http.get<TokenResponse>(environment.tokenProxyUrl).pipe(
+    const body = new HttpParams()
+      .set('grant_type', 'client_credentials')
+      .set('client_id', environment.uid)
+      .set('client_secret', environment.secret);
+    return this.http.post<TokenResponse>('https://api.intra.42.fr/oauth/token', body, {
+      headers: new HttpHeaders({ 'Content-Type': 'application/x-www-form-urlencoded' }),
+    }).pipe(
       tap(res => {
         this.token = res.access_token;
         this.expiresAt = Date.now() + res.expires_in * 1000;
@@ -50,25 +53,13 @@ export class Auth {
 
 // HTTP interceptor that automatically adds a valid 42 access token to every request.
 export const api42Interceptor: HttpInterceptorFn = (req, next) => {
-  if (req.url === environment.tokenProxyUrl) return next(req);
+  if (req.url.includes('/oauth/'))
+    return next(req);
 
   const auth = inject(Auth);
   return auth.getValidToken().pipe(
     switchMap(token =>
-      next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })).pipe(
-        catchError(err => {
-          // Our cached token looked valid but the API rejected it anyway:
-          // force a fresh one and retry the request exactly once.
-          if (err instanceof HttpErrorResponse && err.status === 401) {
-            return auth.refreshToken().pipe(
-              switchMap(freshToken =>
-                next(req.clone({ setHeaders: { Authorization: `Bearer ${freshToken}` } }))
-              ),
-            );
-          }
-          return throwError(() => err);
-        }),
-      )
-    ),
+         next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }))
+    )
   );
 };

@@ -76,11 +76,6 @@ export interface FullProfile {
   skills: SkillUser[];
 }
 
-export interface allStuds {
-  id: number;
-  studs: Student42[];
-}
-
 const API = 'https://api.intra.42.fr/v2';
 
 @Injectable({ providedIn: 'root' })
