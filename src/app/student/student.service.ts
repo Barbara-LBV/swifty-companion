@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, forkJoin, map, of, switchMap } from 'rxjs';
+import { Observable, map, of, switchMap } from 'rxjs';
 
 
 // interfaces representing the structure of objects returned by the 42 API
@@ -56,6 +56,9 @@ export interface Student42 {
   image: { link: string; versions: { large: string; medium: string; small: string; micro: string } };
   phone: string;
   kind: string;
+  'alumni?': boolean;
+  'active?': boolean;
+  'staff?': boolean;
   level: number;
   correction_point: number;
   wallet: number;
@@ -69,11 +72,6 @@ export interface GroupedProject {
   attempts: Team[];
   finalMark: number | null;
   isRetried: boolean;
-}
-
-export interface FullProfile {
-  student: Student42;
-  skills: SkillUser[];
 }
 
 const API = 'https://api.intra.42.fr/v2';
@@ -103,16 +101,8 @@ export class StudentService {
     );
   }
 
-  getFullProfile(login: string): Observable<FullProfile> {
-    return this.http.get<Student42>(`${API}/users/${login}`).pipe(
-      switchMap(user => {
-        const cursus42 = user.cursus_users.find(c => c.cursus.name === '42cursus');
-        return forkJoin({
-          student: of(user),
-          skills:  of([]),
-        });
-      })
-    );
+  getFullProfile(login: string): Observable<Student42> {
+    return this.http.get<Student42>(`${API}/users/${login}`);
   }
 
   displayProjectByCursus(projects: ProjectUser[], cursusId: number): ProjectUser[] {
@@ -146,7 +136,6 @@ export class StudentService {
       };
     });
   }
-
 
   calculateSkillPourcent(skills: SkillUser[]): void {
     for (const skill of skills) {

@@ -31,9 +31,9 @@ import { SearchBarComponent } from './search-bar/search-bar.component';
 
     .search-overlay {
       position: fixed;
-      bottom: 80px;
-      left: 5%;
-      width: 90%;
+      bottom: calc(80px + env(safe-area-inset-bottom));
+      left: calc(5% + env(safe-area-inset-left));
+      width: calc(90% - env(safe-area-inset-left) - env(safe-area-inset-right));
       z-index: 1;
     }`,
   imports: [IonContent, LogoComponent, SearchBarComponent],

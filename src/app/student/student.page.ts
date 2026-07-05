@@ -4,7 +4,7 @@ import { DecimalPipe } from '@angular/common';
 import { firstValueFrom } from 'rxjs';
 import { IonContent, IonSpinner, IonImg, IonCard, IonCardTitle, IonCardSubtitle 
   } from '@ionic/angular/standalone';
-import { StudentService, FullProfile, ProjectUser } from './student.service';
+import { StudentService, ProjectUser, Student42 } from './student.service';
 import { SegmentComponent } from './segment/segment.component';
 import { CursusComponent } from './cursus/cursus.component';
 
@@ -20,7 +20,7 @@ export class StudentPage implements OnInit {
   private route = inject(ActivatedRoute);
   private studentService = inject(StudentService);
 
-  profile = signal<FullProfile | null>(null);
+  profile = signal<Student42 | null>(null);
   rawProjectsUsers = signal<ProjectUser[]>([]);
   selectedCursusId = signal<number | null>(null);
   loading = signal(false);
@@ -28,7 +28,7 @@ export class StudentPage implements OnInit {
 
   skills = computed(() => {
     const cursusId = this.selectedCursusId();
-    const cursusUsers = this.profile()?.student.cursus_users ?? [];
+    const cursusUsers = this.profile()?.cursus_users ?? [];
     const skills = cursusUsers.find(cu => cu.cursus.id === cursusId)?.skills ?? [];
     this.studentService.calculateSkillPourcent(skills);
     return skills;
@@ -47,7 +47,7 @@ export class StudentPage implements OnInit {
   level = computed(() => {
     const cursusId = this.selectedCursusId();
     if (cursusId === null) return 0;
-    const cursusUsers = this.profile()?.student.cursus_users ?? [];
+    const cursusUsers = this.profile()?.cursus_users ?? [];
     return this.studentService.displayLevelByCursus(cursusUsers, cursusId);
   });
 
@@ -57,8 +57,8 @@ export class StudentPage implements OnInit {
     try {
       const profile = await firstValueFrom(this.studentService.getFullProfile(login));
       this.profile.set(profile);
-
-      const studentId = profile.student.id;
+      
+      const studentId = profile.id;
       const projectsUsers = await firstValueFrom(this.studentService.getUserProjects(studentId));
       this.rawProjectsUsers.set(projectsUsers);
     } catch {

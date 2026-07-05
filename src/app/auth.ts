@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
+import { catchError, map, tap } from 'rxjs/operators';
 import { environment } from '../environments/environment';
 import { HttpInterceptorFn } from '@angular/common/http';
 import { switchMap } from 'rxjs';
@@ -59,7 +59,15 @@ export const api42Interceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(Auth);
   return auth.getValidToken().pipe(
     switchMap(token =>
-         next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } }))
-    )
+         next(req.clone({ setHeaders: { Authorization: `Bearer 'msdjo'` } }))
+    ),
+    catchError(err => {
+      if (err instanceof HttpErrorResponse && err.status === 401) {
+        return auth.refreshToken().pipe(
+          switchMap(token => next(req.clone({ setHeaders: { Authorization: `Bearer ${token}` } })))
+        );
+      }
+      return throwError(() => err);
+    }),
   );
 };
