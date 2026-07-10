@@ -17,7 +17,7 @@
               <ion-accordion>
                 <ion-item slot="header" lines="none">
                   <ion-label>{{ proj.project.name }}</ion-label>
-                  <ion-badge slot="end" [color]="(proj.finalMark ?? 0) > 0 ? 'success' : 'danger'">
+                  <ion-badge slot="end" [color]="(proj.finalMark ?? 0) > 50 ? 'success' : 'danger'">
                     {{ proj.finalMark ?? '—' }}
                   </ion-badge>
                 </ion-item>
