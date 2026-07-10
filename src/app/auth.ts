@@ -20,15 +20,19 @@ export class Auth {
   private token: string | null = null;
   private expiresAt = 0;
 
+  // to test the refreshToken() method, force the token to expire
+  // forceExpire(): void {
+  // this.expiresAt = 0;
+  // }
+
   getValidToken(): Observable<string> {
+    this.expiresAt = 0;
     if (this.token && Date.now() < this.expiresAt) {
       return of(this.token); // if token still valid
     }
     return this.refreshToken();
   }
 
-  // Bypasses the local cache entirely: used when the API rejects a token
-  // we believed was still valid (clock drift, early revocation, etc).
   refreshToken(): Observable<string> {
     this.token = null;
     return this.fetchToken();
@@ -59,7 +63,7 @@ export const api42Interceptor: HttpInterceptorFn = (req, next) => {
   const auth = inject(Auth);
   return auth.getValidToken().pipe(
     switchMap(token =>
-         next(req.clone({ setHeaders: { Authorization: `Bearer 'msdjo'` } }))
+         next(req.clone({ setHeaders: { Authorization: `Bearer '${token}'` } })) // replace token by anything to test refreshToken() on 401
     ),
     catchError(err => {
       if (err instanceof HttpErrorResponse && err.status === 401) {

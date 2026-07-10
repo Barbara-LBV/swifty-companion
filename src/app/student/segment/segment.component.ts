@@ -1,7 +1,11 @@
 import { Component, effect, input, signal } from '@angular/core';
 import { IonLabel, IonSegment, IonSegmentButton,
   IonAccordionGroup, IonAccordion, IonItem, IonBadge, IonList, IonIcon } from '@ionic/angular/standalone';
+import { addIcons } from 'ionicons';
+import { chevronDown } from 'ionicons/icons';
 import { SkillUser, GroupedProject } from '../student.service';
+
+addIcons({ 'chevron-down': chevronDown });
 
 export type Segment = 'projects' | 'skills';
 
