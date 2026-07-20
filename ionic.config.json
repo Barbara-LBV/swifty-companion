@@ -1,0 +1,7 @@
+{
+  "name": "Swifty-Companion",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

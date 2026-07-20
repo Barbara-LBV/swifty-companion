@@ -1,0 +1,55 @@
+<ion-content [fullscreen]="true" class="content">
+  @if (loading()) {
+    <ion-spinner name="crescent"></ion-spinner>
+  } @else if (error()) {
+    <p>{{ error() }}</p>
+  } @else if (profile(); as p) {
+    <ion-card class="card">
+      <div class="card-header">
+        <ion-img class="profile-picture" [src]="p.image.link"></ion-img>
+        <div class="card-identity">
+          <ion-card-title>{{ p.usual_full_name }}</ion-card-title>
+          <ion-card-subtitle>{{ p.login }}</ion-card-subtitle>
+        </div>
+      </div>
+      <div class="card-details">
+        <div class="detail-item">
+          <span class="label">Email</span>
+          <span class="value">{{ p.email }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Campus</span>
+          <span class="value">{{ p.campus[0]?.name }}</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Status</span>
+          @if (p['alumni?'] === true) {
+            <span class="value alumni">Alumni</span>
+          } @else if (p['alumni?'] === false && p['active?'] === false) {
+            <span class="value blackholed">Blackholed</span>
+          } @else if (p['staff?'] === true || p.kind === "admin") {
+            <span class="value student">Staff</span>
+          } @else if (p.kind === "student" && p['active?'] === true && p['staff?'] === false) {
+            <span class="value student">Student</span>
+          } @else {
+            <span class="value unknown">Unknown</span>
+          }
+        </div>
+        <div class="detail-item">
+          <span class="label">Level</span>
+          <span class="value">{{ level() | number:'1.2-2' }}%</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Wallet</span>
+          <span class="value">{{ p.wallet }} ₳</span>
+        </div>
+        <div class="detail-item">
+          <span class="label">Eval. Points</span>
+          <span class="value">{{ p.correction_point }}</span>
+        </div>
+      </div>
+    </ion-card>
+    <app-cursus [cursusUsers]="p.cursus_users" (cursusChange)="onCursusChange($event)"></app-cursus>
+    <app-segment [projects]="projects()" [skills]="skills()" />
+  }
+</ion-content>

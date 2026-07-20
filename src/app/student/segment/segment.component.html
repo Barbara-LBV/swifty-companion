@@ -1,0 +1,59 @@
+<ion-segment [value]="segment()" (ionChange)="onSegmentChange($event.detail.value)">
+  <ion-segment-button value="projects">
+    <ion-label>Projets</ion-label>
+  </ion-segment-button>
+  <ion-segment-button value="skills">
+    <ion-label>Compétences</ion-label>
+  </ion-segment-button>
+</ion-segment>
+
+@switch (segment()) {
+  @case ('projects') {
+    <ion-list>
+      @for (proj of projects(); track proj.project.id) {
+        <div class="project-row">
+          @if (proj.isRetried) {
+            <ion-accordion-group>
+              <ion-accordion>
+                <ion-item slot="header" lines="none">
+                  <ion-label>{{ proj.project.name }}</ion-label>
+                  <ion-badge slot="end" [color]="(proj.finalMark ?? 0) > 49 ? 'success' : 'secondary'">
+                    {{ proj.finalMark ?? '—' }}
+                  </ion-badge>
+                </ion-item>
+                <div slot="content">
+                  @for (attempt of proj.attempts; track attempt.id; let i = $index) {
+                    <ion-item lines="inset">
+                      <ion-label class="attempt-label">Attempt {{ i + 1 }}</ion-label>
+                      <ion-badge slot="end" [color]="'secondary'">
+                        {{ attempt.final_mark ?? '—' }}
+                      </ion-badge>
+                    </ion-item>
+                  }
+                </div>
+              </ion-accordion>
+            </ion-accordion-group>
+          } @else {
+            <ion-item lines="none">
+              <ion-label>{{ proj.project.name }}</ion-label>
+              <ion-badge slot="end" [color]="(proj.finalMark ?? 0) > 49 ? 'success' : 'secondary'">
+                {{ proj.finalMark ?? '—' }}
+              </ion-badge>
+              <ion-icon slot="end" name="chevron-down" class="ion-accordion-toggle-icon" style="visibility: hidden;"></ion-icon>
+            </ion-item>
+          }
+        </div>
+      }
+    </ion-list>
+  }
+  @case ('skills') {
+    <ion-list>
+      @for (skill of skills(); track skill.id) {
+        <ion-item lines="inset">
+          <ion-label>{{ skill.name }}</ion-label>
+          <ion-badge slot="end" color="primary" class="skill-badge">{{ skill.level}}  |  {{skill.pourcent}}%</ion-badge>
+        </ion-item>
+      }
+    </ion-list>
+  }
+}

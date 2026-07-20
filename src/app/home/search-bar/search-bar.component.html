@@ -1,0 +1,21 @@
+<ion-toolbar>
+  <ion-searchbar 
+    (ionInput)="handleInput($event)" 
+    (ionFocus)="isFocused = true" 
+    (ionBlur)="isFocused = false">
+  </ion-searchbar>
+</ion-toolbar>
+
+@if (results.length > 0) {
+  <ion-list>
+    @for (student of results; track student.id) {
+      <ion-item button (click)="selectStudent(student)">
+        <ion-label>{{ student.login }}</ion-label>
+      </ion-item>
+    }
+  </ion-list>
+} @else if (noResults) {
+  <ion-item>
+    <ion-label color="medium">Aucun étudiant trouvé.</ion-label>
+  </ion-item>
+}
